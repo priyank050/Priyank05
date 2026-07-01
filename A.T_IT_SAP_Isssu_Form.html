@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAP &amp; IT Service Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --blue:        #0f52ba;
+      --blue-light:  #e8f0fb;
+      --blue-mid:    #3d74d4;
+      --gray-50:     #f7f8fa;
+      --gray-100:    #eef0f4;
+      --gray-300:    #c8cdd8;
+      --gray-500:    #6b7280;
+      --gray-700:    #374151;
+      --gray-900:    #111827;
+      --white:       #ffffff;
+      --radius:      8px;
+      --shadow:      0 4px 24px rgba(15, 82, 186, 0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      background: var(--gray-50);
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+      color: var(--gray-900);
+    }
+
+    .portal-header {
+      max-width: 720px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 14px 22px;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--blue);
+    }
+
+    .header-logo { height: 50px; object-fit: contain; flex-shrink: 0; }
+    .portal-header-text h1 { font-size: 15px; font-weight: 700; color: var(--blue); letter-spacing: -0.2px; }
+    .portal-header-text p  { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+
+    .card {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .section-head {
+      background: var(--blue);
+      color: var(--white);
+      padding: 10px 22px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .section-body {
+      padding: 18px 22px 22px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px 20px;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field.span2 { grid-column: 1 / -1; }
+
+    label { font-size: 11.5px; font-weight: 600; color: var(--gray-700); letter-spacing: 0.2px; cursor: default; }
+
+    input, select, textarea {
+      font-family: inherit;
+      font-size: 13.5px;
+      color: var(--gray-900);
+      background: var(--gray-50);
+      border: 1.5px solid var(--gray-300);
+      border-radius: 6px;
+      padding: 8px 10px;
+      width: 100%;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7280'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 28px;
+    }
+
+    textarea { resize: vertical; min-height: 80px; }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--blue-mid);
+      box-shadow: 0 0 0 3px rgba(61, 116, 212, 0.12);
+      background: var(--white);
+    }
+
+    input[readonly] {
+      background: var(--gray-100);
+      color: var(--gray-500);
+      border-color: var(--gray-100);
+      cursor: default;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .ticket-badge {
+      display: inline-block;
+      width: 100%;
+      padding: 8px 10px;
+      background: var(--gray-100);
+      color: var(--gray-500);
+      border: 1.5px dashed var(--gray-300);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      font-style: italic;
+      letter-spacing: 0.3px;
+    }
+
+    .ticket-badge.assigned {
+      background: var(--blue-light);
+      color: var(--blue);
+      border: 1.5px solid #c0d4f5;
+      font-size: 13.5px;
+      font-weight: 700;
+      font-style: normal;
+      letter-spacing: 0.8px;
+    }
+
+    .submit-wrap { padding: 0 22px 24px; }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-mid) 100%);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(15, 82, 186, 0.3);
+    }
+
+    .btn-submit:hover  { opacity: 0.92; box-shadow: 0 6px 20px rgba(15, 82, 186, 0.4); }
+    .btn-submit:active { transform: scale(0.98); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ── LOADING BANNER ── */
+    .loading-banner {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: var(--blue-light);
+      color: var(--blue);
+      font-size: 12.5px;
+      font-weight: 500;
+      padding: 10px 22px;
+      border-bottom: 1px solid #c0d4f5;
+    }
+    .loading-banner.show { display: flex; }
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid #c0d4f5;
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── ERROR BANNER ── */
+    .error-banner {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      background: #fef2f2;
+      color: #dc2626;
+      font-size: 12.5px;
+      font-weight: 500;
+      padding: 10px 22px;
+      border-bottom: 1px solid #fca5a5;
+    }
+    .error-banner.show { display: flex; }
+
+    /* ── SUCCESS OVERLAY ── */
+    .success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 20, 60, 0.5);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: fadeIn 0.25s ease;
+    }
+    .success-overlay.show { display: flex; }
+
+    @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes popIn   { from { transform: scale(0); } to { transform: scale(1); } }
+
+    .success-box {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 32px 28px 24px;
+      text-align: center;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+      animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .success-check {
+      width: 64px; height: 64px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+      box-shadow: 0 4px 16px rgba(34, 197, 94, 0.35);
+      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both;
+    }
+    .success-check svg { width: 32px; height: 32px; stroke: white; stroke-width: 3; fill: none; }
+
+    .success-box h3 { font-size: 20px; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
+    .success-box p  { font-size: 13px; color: var(--gray-500); line-height: 1.5; margin-bottom: 14px; }
+
+    .success-tid {
+      display: inline-block;
+      background: var(--blue-light);
+      color: var(--blue);
+      font-weight: 700;
+      font-size: 15px;
+      padding: 8px 20px;
+      border-radius: 24px;
+      letter-spacing: 1px;
+      border: 1.5px solid #c0d4f5;
+      margin-bottom: 20px;
+    }
+
+    /* PA status inside popup */
+    .pa-status {
+      font-size: 12px;
+      margin-bottom: 14px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      display: none;
+    }
+    .pa-status.success { display: block; background: #f0fdf4; color: #16a34a; }
+    .pa-status.error   { display: block; background: #fef2f2; color: #dc2626; }
+
+    .popup-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .popup-btn {
+      display: flex; align-items: center; justify-content: center;
+      gap: 7px;
+      padding: 10px 12px;
+      border: none; border-radius: 9px;
+      font-family: inherit; font-size: 13px; font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      white-space: nowrap;
+    }
+    .popup-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .popup-btn:hover  { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+    .popup-btn:active { transform: scale(0.97); }
+
+    .btn-view  { background: var(--blue-light); color: var(--blue); }
+    .btn-copy  { background: #f0fdf4; color: #16a34a; }
+    .btn-pdf   { background: #fef2f2; color: #dc2626; }
+    .btn-print { background: #faf5ff; color: #7c3aed; }
+    .btn-new   { grid-column: 1 / -1; background: linear-gradient(135deg, var(--blue), var(--blue-mid)); color: white; padding: 12px; font-size: 14px; box-shadow: 0 4px 14px rgba(15,82,186,0.25); }
+
+    .ticket-view {
+      display: none;
+      text-align: left;
+      background: var(--gray-50);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      border: 1px solid var(--gray-100);
+      font-size: 12.5px;
+      line-height: 1.8;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .ticket-view.show { display: block; animation: slideUp 0.2s ease; }
+    .ticket-view-row  { display: flex; gap: 8px; border-bottom: 1px solid var(--gray-100); padding: 4px 0; }
+    .ticket-view-row:last-child { border-bottom: none; }
+    .ticket-view-label { font-weight: 600; color: var(--gray-700); min-width: 110px; flex-shrink: 0; }
+    .ticket-view-val   { color: var(--gray-900); }
+
+    .copy-toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: #1e293b; color: white;
+      padding: 10px 20px; border-radius: 8px;
+      font-size: 13px; font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
+      z-index: 9999;
+    }
+    .copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .field-error input,
+    .field-error select,
+    .field-error textarea { border-color: #e53e3e; background: #fff5f5; }
+
+    .err-msg { font-size: 11px; color: #e53e3e; margin-top: 2px; display: none; }
+    .field-error .err-msg { display: block; }
+
+    .file-list { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+    .file-chip {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 8px;
+      background: var(--gray-50);
+      border: 1.5px solid var(--gray-300);
+      border-radius: 6px;
+      padding: 5px 9px;
+      font-size: 11.5px;
+      color: var(--gray-700);
+    }
+    .file-chip.file-chip-error { border-color: #e53e3e; background: #fff5f5; color: #dc2626; }
+    .file-chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .file-chip-size { flex-shrink: 0; color: var(--gray-500); font-weight: 600; }
+    .file-chip-error .file-chip-size { color: #dc2626; }
+
+    @media (min-width: 641px) and (max-width: 900px) {
+      .portal-header, .card { max-width: 600px; }
+    }
+    @media (max-width: 640px) {
+      body { padding: 12px 10px 40px; }
+      .portal-header { padding: 12px 14px; gap: 10px; }
+      .portal-header-text h1 { font-size: 13px; }
+      .portal-header-text p  { font-size: 10px; }
+      .section-body { grid-template-columns: 1fr; padding: 14px 14px 18px; gap: 12px; }
+      .field.span2  { grid-column: 1; }
+      .section-head { padding: 9px 14px; }
+      .submit-wrap  { padding: 0 14px 20px; }
+      .success-box  { padding: 24px 16px 18px; }
+      .popup-actions { gap: 8px; }
+      .popup-btn { font-size: 12px; padding: 9px 8px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="portal-header">
+    <img id="companyLogo" src="https://www.atinks.com/wp-content/uploads/2017/10/A.T-inks-logo-600-DPI-1-e1545645137933.png" alt="Company Logo" class="header-logo">
+    <div class="portal-header-text">
+      <h1>SAP &amp; IT Service Portal</h1>
+      <p>Log a support ticket — we'll get back to you shortly</p>
+    </div>
+  </header>
+
+  <main class="card">
+
+    <!-- Status banners -->
+    <div class="loading-banner" id="loadingBanner">
+      <div class="spinner"></div>
+      <span>Loading dropdown data from server…</span>
+    </div>
+    <div class="error-banner" id="errorBanner">
+      ⚠️ Could not load data from server — using built-in defaults.
+    </div>
+
+    <div class="section-head">Request Information</div>
+    <div class="section-body">
+      <div class="field">
+        <label>Ticket ID</label>
+        <div class="ticket-badge" id="ticketBadge">— Will be assigned on submit —</div>
+        <input type="hidden" id="ticketId">
+      </div>
+      <div class="field">
+        <label>Date &amp; Time</label>
+        <input type="text" id="date" readonly aria-label="Current date and time">
+      </div>
+      <div class="field span2">
+        <label>Issue Type</label>
+        <select id="issueType" onchange="setIssueType(this.value)" aria-label="Select issue type">
+          <option value="IT">IT</option>
+          <option value="SAP">SAP</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="section-head">User Details</div>
+    <div class="section-body">
+      <div class="field">
+        <label for="userName">Full Name *</label>
+        <input type="text" id="userName" placeholder="Your full name" autocomplete="name" required>
+        <span class="err-msg" role="alert">Name is required.</span>
+      </div>
+      <div class="field">
+        <label for="email">Email *</label>
+        <input type="email" id="email" placeholder="you@company.com" autocomplete="email" required>
+        <span class="err-msg" role="alert">Enter a valid email address.</span>
+      </div>
+      <div class="field">
+        <label for="mobile">Mobile *</label>
+        <input type="tel" id="mobile" maxlength="10" placeholder="10-digit number" autocomplete="tel" required>
+        <span class="err-msg" role="alert">Enter a valid 10-digit number.</span>
+      </div>
+      <div class="field">
+        <label for="requestedBy">Requested By</label>
+        <input type="text" id="requestedBy" placeholder="If different from above">
+      </div>
+      <div class="field">
+        <label for="company">Company</label>
+        <select id="company" aria-label="Select company">
+          <option>Rex-Tone Industries Ltd</option>
+          <option>Globex Laboratory (R&amp;D) Ltd</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="department">Department</label>
+        <select id="department" aria-label="Select department"></select>
+      </div>
+      <div class="field">
+        <label for="location">Location</label>
+        <select id="location" aria-label="Select location">
+          <option>Por</option>
+          <option>Dabhasa</option>
+          <option>Unit 3</option>
+          <option>Warehouse</option>
+          <option>Mumbai</option>
+          <option>UrbanII</option>
+          <option>Remote</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="categorySection" style="display:none;">
+      <div class="section-head">IT Issue Details</div>
+      <div class="section-body">
+        <div class="field">
+          <label for="mainCategory">Main Category</label>
+          <select id="mainCategory" onchange="populateSubcategory()" aria-label="Main IT category"></select>
+          <input type="text" id="mainCategoryOther" placeholder="Type other main category" style="display:none; margin-top:6px;" aria-label="Other main category">
+          <span class="err-msg" id="mainCategoryOtherErr" role="alert">Please enter the other main category.</span>
+        </div>
+        <div class="field">
+          <label for="subCategory">Subcategory</label>
+          <select id="subCategory" onchange="populateItems(); toggleOtherInput('subCategory', 'subCategoryOther');" aria-label="IT subcategory"></select>
+          <input type="text" id="subCategoryOther" placeholder="Type other subcategory" style="display:none; margin-top:6px;" aria-label="Other subcategory">
+        </div>
+        <div class="field span2">
+          <label for="itemDetail">Item / Detail</label>
+          <select id="itemDetail" onchange="toggleOtherInput('itemDetail', 'itemDetailOther');" aria-label="Specific IT issue detail"></select>
+          <input type="text" id="itemDetailOther" placeholder="Type other item/detail" style="display:none; margin-top:6px;" aria-label="Other item detail">
+        </div>
+      </div>
+    </div>
+
+    <div id="sapSection" style="display:none;">
+      <div class="section-head">SAP Issue Details</div>
+      <div class="section-body">
+        <div class="field">
+          <label for="sapUserId">SAP User ID</label>
+          <input type="text" id="sapUserId" placeholder="Your SAP login ID" required aria-required="true">
+          <span class="err-msg" id="sapUserIdErr" role="alert">SAP User ID is required.</span>
+        </div>
+        <div class="field">
+          <label for="dbName">Database Name</label>
+          <select id="dbName" aria-label="SAP database name">
+            <option>REXTONE_LIVE</option>
+            <option>GLOBEXLIVE</option>
+            <option>REXTONEDIGITALLTD</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="sapModule">Module</label>
+          <select id="sapModule" onchange="populateSapSubModule(); toggleOtherInput('sapModule', 'sapModuleOther');" aria-label="SAP module"></select>
+          <input type="text" id="sapModuleOther" placeholder="Type other module" style="display:none; margin-top:6px;" aria-label="Other SAP module">
+          <span class="err-msg" id="sapModuleOtherErr" role="alert">Please enter the other module.</span>
+        </div>
+        <div class="field">
+          <label for="sapSubModule">Sub-Module</label>
+          <select id="sapSubModule" onchange="populateSapIssue(); toggleOtherInput('sapSubModule', 'sapSubModuleOther');" aria-label="SAP sub-module"></select>
+          <input type="text" id="sapSubModuleOther" placeholder="Type other sub-module" style="display:none; margin-top:6px;" aria-label="Other SAP sub-module">
+          <span class="err-msg" id="sapSubModuleOtherErr" role="alert">Please enter the other sub-module.</span>
+        </div>
+        <div class="field span2">
+          <label for="sapIssue">Issue Type</label>
+          <select id="sapIssue" onchange="toggleOtherInput('sapIssue', 'sapIssueOther');" aria-label="Specific SAP issue type"></select>
+          <input type="text" id="sapIssueOther" placeholder="Type other issue type" style="display:none; margin-top:6px;" aria-label="Other SAP issue type">
+          <span class="err-msg" id="sapIssueOtherErr" role="alert">Please enter the other issue type.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head">Description &amp; Attachment</div>
+    <div class="section-body">
+      <div class="field span2">
+        <label for="desc">Issue Description</label>
+        <textarea id="desc" placeholder="Describe the issue in detail…" aria-label="Describe your issue" required aria-required="true"></textarea>
+        <span class="err-msg" id="descErr" role="alert">Issue Description is required.</span>
+      </div>
+      <div class="field">
+        <label for="attachYN">Attach a File?</label>
+        <select id="attachYN" onchange="toggleUpload(this.value)" aria-label="Attach a file">
+          <option value="No">No</option>
+          <option value="Yes">Yes</option>
+        </select>
+      </div>
+      <div class="field" id="uploadSection" style="display:none;">
+        <label for="fileUpload">Upload File(s) <span style="font-weight:400;color:var(--gray-500);">— up to 5 files, 10 MB each</span></label>
+        <input type="file" id="fileUpload" accept="image/*,.pdf,.doc,.docx,.xlsx" aria-label="Upload attachment" multiple onchange="handleFileSelect()">
+        <span class="err-msg" id="fileErr" role="alert"></span>
+        <div id="fileList" class="file-list"></div>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button type="button" class="btn-submit" id="submitBtn" onclick="handleSubmit()">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+        </svg>
+        Submit Ticket
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Success popup -->
+  <div class="success-overlay" id="successOverlay" role="dialog" aria-modal="true" aria-label="Ticket submitted successfully">
+    <div class="success-box">
+      <div class="success-check" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h3>Ticket Submitted!</h3>
+      <p>Your request has been logged successfully.<br>Our team will get back to you soon.</p>
+      <div class="success-tid" id="successTid" aria-live="polite"></div>
+
+      <!-- Power Automate submission status -->
+      <div class="pa-status" id="paStatus"></div>
+
+      <div class="ticket-view" id="ticketView" aria-label="Ticket details"></div>
+      <div class="popup-actions">
+        <button class="popup-btn btn-view" onclick="toggleTicketView()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+          View Ticket
+        </button>
+        <button class="popup-btn btn-copy" onclick="copyTicketNumber()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          Copy Number
+        </button>
+        <button class="popup-btn btn-pdf" onclick="downloadPDF()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+          Download PDF
+        </button>
+        <button class="popup-btn btn-print" onclick="printTicket()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 6 2 18 2 18 9"/>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+            <rect x="6" y="14" width="12" height="8"/>
+          </svg>
+          Print
+        </button>
+        <button class="popup-btn btn-new" onclick="resetForm()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Create New Ticket
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="copy-toast" id="copyToast" role="status" aria-live="polite">✅ Ticket number copied!</div>
+
+  <script>
+    /* ============================================================
+       POWER AUTOMATE CONFIGURATION
+       Paste your Power Automate HTTP trigger URLs here.
+       Leave a URL blank ("") to skip that feature.
+       ============================================================ */
+    const PA_CONFIG = {
+      // GET — returns IT category data as JSON
+      // Expected response format:
+      // {
+      //   "Hardware": { "Desktop": ["Desktop issue","Boot issue"], ... },
+      //   "Software": { ... }
+      // }
+      fetchCategories: "",
+
+      // GET — returns SAP module data as JSON
+      // Expected response format:
+      // {
+      //   "Finance (FI)": { "Accounts Payable": ["Invoice not posted", ...], ... }
+      // }
+      fetchSapData: "",
+
+      // GET — returns department data as JSON
+      // Expected response format:
+      // {
+      //   "Rex-Tone Industries Ltd": ["Quality Assurance", "Production", ...],
+      //   "Globex Laboratory (R&D) Ltd": ["Production", ...]
+      // }
+      fetchDepartments: "",
+
+      // POST — receives ticket data when form is submitted
+      // Payload sent: { ticketId, dateTime, issueType, name, email, mobile,
+      //                 company, department, location, requestedBy,
+      //                 category/sapModule (depending on type), description,
+      //                 attachments: [{ name, contentType, sizeBytes, contentBytes }] }
+      //                 (contentBytes is base64-encoded file content; max 5 files, 10 MB each)
+      submitTicket: "https://default60d4d65065f54b7c9ad1ba799d4bf9.43.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/47d51de7c4a8491a8f6ad34c36982ab5/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=DihvRycGclj9lN2PUp9tlNx6ThU_RPB9D4zt_4um9GU"
+    };
+
+    /* ============================================================
+       FALLBACK DATA (used if Power Automate URLs are blank or fail)
+       ============================================================ */
+    const DEFAULT_CATEGORIES = {
+      "Hardware": {
+        "Desktop":          ["Desktop issue", "Hardware failure", "Boot issue", "Slow performance"],
+        "Laptop":           ["Laptop issue", "Battery problem", "Overheating", "Keyboard/Touchpad"],
+        "Printer":          ["Printer issue", "Paper jam", "Not printing", "Driver issue"],
+        "Scanner":          ["Scanner issue", "Not detected", "Quality problem"],
+        "Monitor":          ["Monitor issue", "No display", "Flickering", "Resolution"],
+        "Keyboard / Mouse": ["Peripheral issue", "Not working", "USB not detected"],
+        "UPS":              ["UPS issue", "No power backup", "Beeping"],
+        "Mobile Device":    ["Mobile device issue", "Setup", "MDM enrollment"]
+      },
+      "Software": {
+        "Microsoft Office":   ["Office issue", "Activation", "Crash", "Not opening"],
+        "ERP":                ["ERP issue", "Slow", "Crash", "Login error"],
+        "Antivirus":          ["AV issue", "Alert", "Update", "Scan"],
+        "PDF Reader":         ["PDF issue", "Cannot open", "Print issue"],
+        "Browser":            ["Browser issue", "Slow", "Extension", "Clear cache"],
+        "Custom Application": ["App issue", "Crash", "Login", "Feature error"],
+        "License Activation": ["License request", "New license", "Renewal"]
+      },
+      "Network / Internet": {
+        "LAN Issue":            ["LAN issue", "No connection", "Intermittent"],
+        "WiFi Issue":           ["WiFi issue", "Cannot connect", "Weak signal"],
+        "VPN":                  ["VPN issue", "Cannot connect", "Slow", "Auth error"],
+        "Slow Internet":        ["Performance", "Bandwidth issue"],
+        "No Internet":          ["Outage", "Complete loss"],
+        "Shared Folder Access": ["Access issue", "Permission denied", "Mapping"]
+      },
+      "Email & Communication": {
+        "Outlook":            ["Outlook issue", "Crash", "Sync", "Profile corrupt"],
+        "Email Access":       ["Mailbox access", "Cannot login", "Locked"],
+        "Password Reset":     ["Reset", "Forgot password"],
+        "Mailbox Full":       ["Storage", "Archive request"],
+        "Distribution Group": ["DG request", "Add/remove member"],
+        "Teams / Zoom":       ["Meeting tools", "Cannot join", "Audio/Video issue"]
+      },
+      "User Account / Access Management": {
+        "New User Creation": ["Create account", "New joiner setup"],
+        "Disable User":      ["Disable account", "Resignation/transfer"],
+        "Password Reset":    ["Reset", "Forgot password"],
+        "Role Access":       ["Role request", "New role", "Change role"],
+        "Permission Change": ["Permission", "Add access", "Remove access"]
+      },
+      "Security": {
+        "Antivirus Alert":     ["Security alert", "Virus found", "Quarantine"],
+        "Phishing Email":      ["Phishing", "Suspicious email"],
+        "Suspicious Activity": ["Suspicious", "Unauthorized access"],
+        "USB Access":          ["USB request", "Block/Unblock"],
+        "Firewall Request":    ["Firewall", "Port access", "Block IP"]
+      },
+      "Asset Management": {
+        "New Asset Request": ["New asset", "PC", "Laptop", "Printer"],
+        "Asset Transfer":    ["Transfer", "User change"],
+        "Asset Return":      ["Return", "Resignation"],
+        "Warranty Check":    ["Warranty", "Check status"],
+        "Stock Request":     ["Stock", "Consumables", "Toner"]
+      },
+      "Server / Infrastructure": {
+        "File Server":        ["File server", "Access", "Slow"],
+        "Backup":             ["Backup", "Failure", "Restore"],
+        "AD Server":          ["Directory", "User sync", "Login issue"],
+        "Database":           ["DB", "Connectivity", "Slow query"],
+        "CCTV":               ["CCTV", "Not recording", "Access"],
+        "Attendance Machine": ["Biometric", "Not syncing", "Enrollment"]
+      },
+      "Facilities / Misc IT Support": {
+        "Projector":          ["Projector", "No display", "HDMI issue"],
+        "Meeting Room Setup": ["Meeting room", "AV setup"],
+        "Video Conference":   ["VC", "Equipment issue"],
+        "TV Display":         ["Display", "Screensaver", "Input selection"]
+      },
+      "Service Requests": {
+        "Install Software":      ["Install", "Specific software request"],
+        "New Email ID":          ["New mailbox", "Setup"],
+        "New Printer Setup":     ["Setup", "Driver install"],
+        "Upgrade RAM":           ["Upgrade", "RAM", "SSD"],
+        "Shared Folder Request": ["Folder request", "Create", "Access"]
+      },
+      "Production IT": {
+        "Shop Floor PC":     ["Plant PC", "Crash", "Slow"],
+        "Barcode Scanner":   ["Scanner", "Not reading", "Driver"],
+        "Label Printer":     ["Label printer", "Not printing", "Jam"],
+        "PLC Connectivity":  ["PLC", "Communication failure"],
+        "CNC System Support":["CNC", "Software", "Connectivity"]
+      },
+      "Plant Operations": {
+        "CCTV":               ["CCTV", "Camera down", "Recording"],
+        "Biometric Machine":  ["Biometric", "Not punching", "Sync"],
+        "Warehouse Terminal": ["Warehouse", "Terminal issue"]
+      }
+    };
+
+    const DEFAULT_SAP = {
+      "Financials": {
+        "General Ledger": ["Posting error", "Journal entry mismatch", "Reconciliation issue", "Financial report issue"],
+        "Accounts Receivable": ["Invoice issue", "Payment receipt not cleared", "Dunning issue"],
+        "Accounts Payable": ["Invoice posting issue", "Payment block", "Vendor balance issue"],
+        "Fixed Assets": ["Asset not created", "Depreciation issue", "Transfer issue"],
+        "Banking": ["Bank reconciliation issue", "Payment run error", "Cheque printing issue"],
+        "Tax / GST": ["Tax calculation error", "GST mismatch", "TDS issue"]
+      },
+      "Sales – A/R (Accounts Receivable)": {
+        "Sales Quotation": ["Quotation issue", "Pricing mismatch"],
+        "Sales Order": ["Order creation issue", "Delivery block"],
+        "Delivery": ["Delivery not created", "Goods issue issue"],
+        "A/R Invoice": ["Invoice generation issue", "Billing block"],
+        "Credit Memo": ["Credit memo issue", "Return processing issue"]
+      },
+      "Purchasing – A/P (Accounts Payable)": {
+        "Purchase Requisition": ["PR creation issue", "Approval issue"],
+        "Purchase Order": ["PO release issue", "Price mismatch"],
+        "Goods Receipt PO": ["GRPO mismatch", "Invoice mismatch"],
+        "A/P Invoice": ["Invoice posting issue", "Tax mismatch"],
+        "Vendor Master": ["Vendor data issue", "Payment block"]
+      },
+      "Business Partners": {
+        "Customer Master": ["Master data issue", "Credit limit issue"],
+        "Vendor Master": ["Vendor creation issue", "Address issue"],
+        "Contact Persons": ["Contact update issue", "Linking issue"]
+      },
+      "Banking": {
+        "Incoming Payments": ["Payment mismatch", "Bank reconciliation issue"],
+        "Outgoing Payments": ["Payment run error", "Cheque issue"],
+        "Bank Reconciliation": ["Statement mismatch", "Clearing issue"]
+      },
+      "Inventory": {
+        "Item Master": ["Item data issue", "Stocking issue"],
+        "Goods Receipt": ["GR posting issue", "Quantity mismatch"],
+        "Inventory Transfer": ["Transfer posting issue", "Location issue"],
+        "Physical Inventory": ["Count mismatch", "Adjustment issue"]
+      },
+      "Production": {
+        "BOM": ["BOM structure issue", "Component issue"],
+        "Production Order": ["Order creation issue", "Confirmation error"],
+        "Material Issue": ["Consumption mismatch", "Issue posting issue"]
+      },
+      "MRP (Material Requirement Planning)": {
+        "MRP Run": ["Planning error", "Exception messages"],
+        "Forecasting": ["Forecast mismatch", "Demand issue"],
+        "Order Recommendations": ["Recommendation issue", "Supply mismatch"]
+      },
+      "Service": {
+        "Service Contracts": ["Contract validity issue", "Renewal issue"],
+        "Service Calls": ["Status update issue", "Resolution tracking issue"],
+        "Equipment Cards": ["Equipment linkage issue", "Master data issue"]
+      },
+      "Human Resources (HR)": {
+        "Employee Master": ["Employee data issue", "Org assignment issue"],
+        "Attendance": ["Attendance mismatch", "Shift issue"],
+        "Payroll": ["Payroll run issue", "Wage type issue"]
+      },
+      "Project Management": {
+        "Project Definition": ["Project setup issue", "WBS issue"],
+        "Resource Planning": ["Capacity issue", "Assignment issue"],
+        "Budgeting": ["Budget mismatch", "Approval issue"]
+      },
+      "Reports & Analytics": {
+        "Standard Reports": ["Report data mismatch", "Layout issue"],
+        "Query Manager": ["Query error", "Performance issue"],
+        "Dashboards": ["Dashboard data issue", "Refresh issue"]
+      },
+      "Administration": {
+        "User Management": ["User creation issue", "Role issue"],
+        "Authorizations": ["Authorization error", "Access issue"],
+        "System Initialization": ["Config issue", "Numbering series issue"]
+      },
+      "Integration Framework / Add-ons": {
+        "API / Service Layer": ["Connection issue", "Data sync error"],
+        "Third-party Add-ons": ["Integration failure", "Mapping issue"],
+        "E-invoicing": ["Submission issue", "Validation error"]
+      },
+      "CRM (Customer Relationship Management)": {
+        "Business Partner": ["BP linkage issue", "Contact issue"],
+        "Opportunity": ["Opportunity update issue", "Stage issue"],
+        "Activities": ["Activity sync issue", "Reminder issue"]
+      },
+      "Fixed Assets": {
+        "Asset Master": ["Asset not created", "Depreciation issue"],
+        "Asset Transfer": ["Transfer posting issue", "Location issue"],
+        "Retirement": ["Retirement posting issue", "Settlement issue"]
+      }
+    };
+
+    const DEFAULT_DEPARTMENTS = {
+      "Rex-Tone Industries Ltd": [
+        "Quality Assurance","Quality Control","Production","Maintenance","Procurement",
+        "Dispatch - Domestic","Dispatch - Export","HR / Administration","IT","Store",
+        "Sales & Marketing","SAP","Packing"
+      ],
+      "Globex Laboratory (R&D) Ltd": [
+        "Production","Maintenance","Stores","Procurement","Quality Control","Quality Assurance",
+        "SAP","Dispatch","Systems","Human Resources & Administration","Water Treatment Plant",
+        "Sales & Marketing","Information Technology (IT)"
+      ]
+    };
+
+    /* ============================================================
+       RUNTIME DATA — populated from PA or fallback defaults
+       ============================================================ */
+    let categoryData   = null;
+    let sapData        = null;
+    let departmentData = null;
+    let currentIssueType = "IT";
+
+    /* ============================================================
+       ATTACHMENT LIMITS
+       ============================================================ */
+    const MAX_FILES        = 5;
+    const MAX_FILE_SIZE    = 10 * 1024 * 1024; // 10 MB per file
+    let selectedFiles      = []; // valid File objects currently selected
+
+    /* ============================================================
+       HELPER: fetch JSON from a URL with timeout
+       ============================================================ */
+    async function fetchJSON(url) {
+      const controller = new AbortController();
+      const timeout    = setTimeout(() => controller.abort(), 8000); // 8s timeout
+      try {
+        const res = await fetch(url, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal
+        });
+        clearTimeout(timeout);
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return await res.json();
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
+
+    /* ============================================================
+       PAGE INIT — fetch data from PA, fall back to defaults
+       ============================================================ */
+    window.addEventListener("load", async function () {
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
+
+      const hasAnyFetch = PA_CONFIG.fetchCategories || PA_CONFIG.fetchSapData || PA_CONFIG.fetchDepartments;
+
+      if (hasAnyFetch) {
+        document.getElementById("loadingBanner").classList.add("show");
+      }
+
+      let fetchFailed = false;
+
+      // Fetch all three in parallel
+      const [catResult, sapResult, deptResult] = await Promise.allSettled([
+        PA_CONFIG.fetchCategories  ? fetchJSON(PA_CONFIG.fetchCategories)  : Promise.resolve(null),
+        PA_CONFIG.fetchSapData     ? fetchJSON(PA_CONFIG.fetchSapData)     : Promise.resolve(null),
+        PA_CONFIG.fetchDepartments ? fetchJSON(PA_CONFIG.fetchDepartments) : Promise.resolve(null)
+      ]);
+
+      // Apply results or fall back
+      categoryData   = (catResult.status  === "fulfilled" && catResult.value)  ? catResult.value  : DEFAULT_CATEGORIES;
+      sapData        = (sapResult.status  === "fulfilled" && sapResult.value)  ? sapResult.value  : DEFAULT_SAP;
+      departmentData = (deptResult.status === "fulfilled" && deptResult.value) ? deptResult.value : DEFAULT_DEPARTMENTS;
+
+      // Check if any fetch that was configured actually failed
+      if (
+        (PA_CONFIG.fetchCategories  && catResult.status  === "rejected") ||
+        (PA_CONFIG.fetchSapData     && sapResult.status  === "rejected") ||
+        (PA_CONFIG.fetchDepartments && deptResult.status === "rejected")
+      ) {
+        fetchFailed = true;
+      }
+
+      document.getElementById("loadingBanner").classList.remove("show");
+      if (fetchFailed) {
+        document.getElementById("errorBanner").classList.add("show");
+      }
+
+      // Populate IT main categories
+      const mainCat = document.getElementById("mainCategory");
+      Object.keys(categoryData).forEach(function (name) {
+        const opt = document.createElement("option");
+        opt.textContent = name;
+        mainCat.appendChild(opt);
+      });
+      const otherMainCatOption = document.createElement("option");
+      otherMainCatOption.value = "Other";
+      otherMainCatOption.textContent = "Other";
+      mainCat.appendChild(otherMainCatOption);
+
+      populateSubcategory();
+      loadDepartments();
+      updateLogo();
+      setIssueType("IT");
+
+      document.getElementById("company").addEventListener("change", function () {
+        loadDepartments();
+        updateLogo();
+      });
+    });
+
+    /* ============================================================
+       LIVE CLOCK
+       ============================================================ */
+    function updateDateTime() {
+      const now     = new Date();
+      const dateStr = now.toLocaleDateString("en-GB",  { day: "2-digit", month: "2-digit", year: "numeric" });
+      const timeStr = now.toLocaleTimeString("en-GB",  { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      document.getElementById("date").value = dateStr + "  " + timeStr;
+    }
+
+    /* ============================================================
+       ISSUE TYPE TOGGLE
+       ============================================================ */
+    function setIssueType(type) {
+      currentIssueType = type;
+      document.getElementById("categorySection").style.display = (type === "IT")  ? "" : "none";
+      document.getElementById("sapSection").style.display      = (type === "SAP") ? "" : "none";
+      if (type === "SAP") populateSapModules();
+    }
+
+    /* ============================================================
+       TICKET ID GENERATION
+       ============================================================ */
+    function generateTicketID() {
+      const now      = new Date();
+      const datePart = now.getFullYear().toString() +
+        String(now.getMonth() + 1).padStart(2, "0") +
+        String(now.getDate()).padStart(2, "0");
+      const timePart = String(now.getHours()).padStart(2, "0") +
+        String(now.getMinutes()).padStart(2, "0") +
+        String(now.getSeconds()).padStart(2, "0");
+      const id = currentIssueType + "-" + datePart + "-" + timePart;
+      document.getElementById("ticketId").value = id;
+      const badge = document.getElementById("ticketBadge");
+      badge.textContent = id;
+      badge.classList.add("assigned");
+      return id;
+    }
+
+    /* ============================================================
+       IT CASCADING DROPDOWNS
+       ============================================================ */
+    function populateSubcategory() {
+      if (!categoryData) return;
+      const sel = document.getElementById("mainCategory").value;
+      const sub = document.getElementById("subCategory");
+      sub.innerHTML = "";
+      if (sel !== "Other") {
+        Object.keys(categoryData[sel] || {}).forEach(function (name) {
+          const opt = document.createElement("option");
+          opt.textContent = name;
+          sub.appendChild(opt);
+        });
+      }
+      const otherOption = document.createElement("option");
+      otherOption.value = "Other";
+      otherOption.textContent = "Other";
+      sub.appendChild(otherOption);
+      const firstRealOption = Array.from(sub.options).find(function (opt) { return opt.value !== "Other"; });
+      if (firstRealOption) {
+        sub.value = firstRealOption.value;
+      } else {
+        sub.value = "Other";
+      }
+      toggleOtherInput("mainCategory", "mainCategoryOther");
+      populateItems();
+    }
+
+    function populateItems() {
+      if (!categoryData) return;
+      const main = document.getElementById("mainCategory").value;
+      const sub  = document.getElementById("subCategory").value;
+      const item = document.getElementById("itemDetail");
+      item.innerHTML = "";
+      if (main !== "Other" && sub !== "Other") {
+        ((categoryData[main] || {})[sub] || []).forEach(function (name) {
+          const opt = document.createElement("option");
+          opt.textContent = name;
+          item.appendChild(opt);
+        });
+      }
+      const otherOption = document.createElement("option");
+      otherOption.value = "Other";
+      otherOption.textContent = "Other";
+      item.appendChild(otherOption);
+      const firstRealOption = Array.from(item.options).find(function (opt) { return opt.value !== "Other"; });
+      if (firstRealOption) {
+        item.value = firstRealOption.value;
+      } else {
+        item.value = "Other";
+      }
+      toggleOtherInput("subCategory", "subCategoryOther");
+      toggleOtherInput("itemDetail", "itemDetailOther");
+    }
+
+    function toggleOtherInput(selectId, inputId) {
+      const select = document.getElementById(selectId);
+      const input  = document.getElementById(inputId);
+      const isOther = select.value === "Other";
+      input.style.display = isOther ? "block" : "none";
+      if (!isOther) input.value = "";
+    }
+
+    /* ============================================================
+       SAP CASCADING DROPDOWNS
+       ============================================================ */
+    function populateSapModules() {
+      if (!sapData) return;
+      const mod = document.getElementById("sapModule");
+      mod.innerHTML = "";
+      Object.keys(sapData).forEach(function (name) {
+        const opt = document.createElement("option");
+        opt.textContent = name;
+        mod.appendChild(opt);
+      });
+      const otherOption = document.createElement("option");
+      otherOption.value = "Other";
+      otherOption.textContent = "Other";
+      mod.appendChild(otherOption);
+      const firstRealOption = Array.from(mod.options).find(function (opt) { return opt.value !== "Other"; });
+      if (firstRealOption) {
+        mod.value = firstRealOption.value;
+      } else {
+        mod.value = "Other";
+      }
+      populateSapSubModule();
+    }
+
+    function populateSapSubModule() {
+      if (!sapData) return;
+      const sel = document.getElementById("sapModule").value;
+      const sub = document.getElementById("sapSubModule");
+      sub.innerHTML = "";
+      Object.keys(sapData[sel] || {}).forEach(function (name) {
+        const opt = document.createElement("option");
+        opt.textContent = name;
+        sub.appendChild(opt);
+      });
+      const otherOption = document.createElement("option");
+      otherOption.value = "Other";
+      otherOption.textContent = "Other";
+      sub.appendChild(otherOption);
+      const firstRealOption = Array.from(sub.options).find(function (opt) { return opt.value !== "Other"; });
+      if (firstRealOption) {
+        sub.value = firstRealOption.value;
+      } else {
+        sub.value = "Other";
+      }
+      toggleOtherInput("sapModule", "sapModuleOther");
+      toggleOtherInput("sapSubModule", "sapSubModuleOther");
+      populateSapIssue();
+    }
+
+    function populateSapIssue() {
+      if (!sapData) return;
+      const mod   = document.getElementById("sapModule").value;
+      const sub   = document.getElementById("sapSubModule").value;
+      const issue = document.getElementById("sapIssue");
+      issue.innerHTML = "";
+      ((sapData[mod] || {})[sub] || []).forEach(function (name) {
+        const opt = document.createElement("option");
+        opt.textContent = name;
+        issue.appendChild(opt);
+      });
+      const otherOption = document.createElement("option");
+      otherOption.value = "Other";
+      otherOption.textContent = "Other";
+      issue.appendChild(otherOption);
+      const firstRealOption = Array.from(issue.options).find(function (opt) { return opt.value !== "Other"; });
+      if (firstRealOption) {
+        issue.value = firstRealOption.value;
+      } else {
+        issue.value = "Other";
+      }
+      toggleOtherInput("sapIssue", "sapIssueOther");
+    }
+
+    /* ============================================================
+       LOGO & DEPARTMENTS
+       ============================================================ */
+    function updateLogo() {
+      const company = document.getElementById("company").value;
+      const logo    = document.getElementById("companyLogo");
+      logo.src = "https://www.atinks.com/wp-content/uploads/2017/10/A.T-inks-logo-600-DPI-1-e1545645137933.png";
+      logo.alt = company;
+    }
+
+    function loadDepartments() {
+      if (!departmentData) return;
+      const company = document.getElementById("company").value;
+      const dept    = document.getElementById("department");
+      dept.innerHTML = "";
+      (departmentData[company] || []).forEach(function (name) {
+        const opt = document.createElement("option");
+        opt.textContent = name;
+        dept.appendChild(opt);
+      });
+    }
+
+    function toggleUpload(value) {
+      document.getElementById("uploadSection").style.display = (value === "Yes") ? "" : "none";
+      if (value === "No") {
+        document.getElementById("fileUpload").value = "";
+        selectedFiles = [];
+        document.getElementById("fileList").innerHTML = "";
+        document.getElementById("fileErr").textContent = "";
+        setFieldError("fileUpload", false);
+      }
+    }
+
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + " B";
+      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + " KB";
+      return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+    }
+
+    /* ============================================================
+       FILE ATTACHMENT HANDLING
+       Enforces: max 5 files, max 10 MB per file.
+       ============================================================ */
+    function handleFileSelect() {
+      const input    = document.getElementById("fileUpload");
+      const fileErr   = document.getElementById("fileErr");
+      const fileList  = document.getElementById("fileList");
+      const allFiles  = Array.from(input.files || []);
+
+      fileList.innerHTML = "";
+      fileErr.textContent = "";
+      setFieldError("fileUpload", false);
+
+      if (allFiles.length === 0) {
+        selectedFiles = [];
+        return;
+      }
+
+      let errorMsg = "";
+      if (allFiles.length > MAX_FILES) {
+        errorMsg = "You can attach a maximum of " + MAX_FILES + " files.";
+      }
+
+      const oversized = allFiles.filter(function (f) { return f.size > MAX_FILE_SIZE; });
+      if (oversized.length > 0) {
+        errorMsg = (errorMsg ? errorMsg + " " : "") +
+          "Each file must be 10 MB or smaller (" + oversized.length + " file" +
+          (oversized.length > 1 ? "s exceed" : " exceeds") + " the limit).";
+      }
+
+      // Keep only valid files (within size limit), capped at MAX_FILES
+      selectedFiles = allFiles.filter(function (f) { return f.size <= MAX_FILE_SIZE; }).slice(0, MAX_FILES);
+
+      allFiles.forEach(function (f) {
+        const tooBig = f.size > MAX_FILE_SIZE;
+        const chip = document.createElement("div");
+        chip.className = "file-chip" + (tooBig ? " file-chip-error" : "");
+        chip.innerHTML =
+          '<span class="file-chip-name">' + (tooBig ? "⚠️ " : "") + f.name + '</span>' +
+          '<span class="file-chip-size">' + formatFileSize(f.size) + '</span>';
+        fileList.appendChild(chip);
+      });
+
+      if (errorMsg) {
+        fileErr.textContent = errorMsg;
+        setFieldError("fileUpload", true);
+      }
+    }
+
+    /* Convert a File to a base64 string (no data: prefix) for JSON transport */
+    function fileToBase64(file) {
+      return new Promise(function (resolve, reject) {
+        const reader = new FileReader();
+        reader.onload  = function () { resolve(reader.result.split(",")[1] || ""); };
+        reader.onerror = function () { reject(reader.error); };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function buildAttachmentsPayload() {
+      if (!selectedFiles.length) return [];
+      const encoded = await Promise.all(selectedFiles.map(async function (f) {
+        return {
+          name:        f.name,
+          contentType: f.type || "application/octet-stream",
+          sizeBytes:   f.size,
+          contentBytes: await fileToBase64(f)
+        };
+      }));
+      return encoded;
+    }
+
+    /* ============================================================
+       VALIDATION
+       ============================================================ */
+    function setFieldError(id, hasError) {
+      document.getElementById(id).closest(".field").classList.toggle("field-error", hasError);
+    }
+
+    function validateForm() {
+      const name      = document.getElementById("userName").value.trim();
+      const email     = document.getElementById("email").value.trim();
+      const mobile    = document.getElementById("mobile").value.trim();
+      const issueType = document.getElementById("issueType").value;
+      const sapUserId = document.getElementById("sapUserId").value.trim();
+      const desc      = document.getElementById("desc").value.trim();
+      const mainCategoryOther = document.getElementById("mainCategoryOther").value.trim();
+      const sapModuleOther = document.getElementById("sapModuleOther").value.trim();
+      const sapSubModuleOther = document.getElementById("sapSubModuleOther").value.trim();
+      const sapIssueOther = document.getElementById("sapIssueOther").value.trim();
+      const attachYN  = document.getElementById("attachYN").value;
+      const ok = {
+        name:      name.length > 0,
+        email:     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
+        mobile:    /^[0-9]{10}$/.test(mobile),
+        sapUserId: issueType !== "SAP" || sapUserId.length > 0,
+        desc:      desc.length > 0,
+        mainCategoryOther: issueType !== "IT" || document.getElementById("mainCategory").value !== "Other" || mainCategoryOther.length > 0,
+        sapModuleOther: issueType !== "SAP" || document.getElementById("sapModule").value !== "Other" || sapModuleOther.length > 0,
+        sapSubModuleOther: issueType !== "SAP" || document.getElementById("sapSubModule").value !== "Other" || sapSubModuleOther.length > 0,
+        sapIssueOther: issueType !== "SAP" || document.getElementById("sapIssue").value !== "Other" || sapIssueOther.length > 0
+      };
+      setFieldError("userName", !ok.name);
+      setFieldError("email",    !ok.email);
+      setFieldError("mobile",   !ok.mobile);
+      setFieldError("sapUserId", issueType === "SAP" && !ok.sapUserId);
+      setFieldError("desc",     !ok.desc);
+      setFieldError("mainCategoryOther", issueType === "IT" && document.getElementById("mainCategory").value === "Other" && !ok.mainCategoryOther);
+      setFieldError("sapModuleOther", issueType === "SAP" && document.getElementById("sapModule").value === "Other" && !ok.sapModuleOther);
+      setFieldError("sapSubModuleOther", issueType === "SAP" && document.getElementById("sapSubModule").value === "Other" && !ok.sapSubModuleOther);
+      setFieldError("sapIssueOther", issueType === "SAP" && document.getElementById("sapIssue").value === "Other" && !ok.sapIssueOther);
+
+      let fileOk = true;
+      if (attachYN === "Yes") {
+        const fileErr = document.getElementById("fileErr");
+        const totalSelected = (document.getElementById("fileUpload").files || []).length;
+        if (totalSelected === 0) {
+          fileErr.textContent = "Please attach at least one file, or set this to \"No\".";
+          setFieldError("fileUpload", true);
+          fileOk = false;
+        } else if (totalSelected > MAX_FILES) {
+          fileErr.textContent = "You can attach a maximum of " + MAX_FILES + " files.";
+          setFieldError("fileUpload", true);
+          fileOk = false;
+        } else if (selectedFiles.length !== totalSelected) {
+          // Some selected files were filtered out for being oversized
+          fileErr.textContent = "Each file must be 10 MB or smaller. Please remove the oversized file(s).";
+          setFieldError("fileUpload", true);
+          fileOk = false;
+        }
+      }
+
+      return ok.name && ok.email && ok.mobile && ok.sapUserId && ok.desc && ok.mainCategoryOther && ok.sapModuleOther && ok.sapSubModuleOther && ok.sapIssueOther && fileOk;
+    }
+
+    /* ============================================================
+       COLLECT TICKET DATA
+       ============================================================ */
+    function collectTicketData() {
+      const issueType = document.getElementById("issueType").value;
+      const rows = [
+        ["Ticket ID",    document.getElementById("ticketId").value],
+        ["Date & Time",  document.getElementById("date").value],
+        ["Issue Type",   issueType],
+        ["Name",         document.getElementById("userName").value],
+        ["Email",        document.getElementById("email").value],
+        ["Mobile",       document.getElementById("mobile").value],
+        ["Company",      document.getElementById("company").value],
+        ["Department",   document.getElementById("department").value],
+        ["Location",     document.getElementById("location").value],
+        ["Requested By", document.getElementById("requestedBy").value || "—"]
+      ];
+      if (issueType === "IT") {
+        rows.push(
+          ["Category",    document.getElementById("mainCategory").value],
+          ["Subcategory", document.getElementById("subCategory").value],
+          ["Item/Detail", document.getElementById("itemDetail").value]
+        );
+      } else {
+        const sapModuleValue = document.getElementById("sapModule").value === "Other"
+          ? (document.getElementById("sapModuleOther").value || "Other")
+          : document.getElementById("sapModule").value;
+        const sapSubModuleValue = document.getElementById("sapSubModule").value === "Other"
+          ? (document.getElementById("sapSubModuleOther").value || "Other")
+          : document.getElementById("sapSubModule").value;
+        const sapIssueValue = document.getElementById("sapIssue").value === "Other"
+          ? (document.getElementById("sapIssueOther").value || "Other")
+          : document.getElementById("sapIssue").value;
+        rows.push(
+          ["SAP User ID", document.getElementById("sapUserId").value || "—"],
+          ["Database",    document.getElementById("dbName").value],
+          ["Module",      sapModuleValue],
+          ["Sub-Module",  sapSubModuleValue],
+          ["Issue Type",  sapIssueValue]
+        );
+      }
+      rows.push(["Description", document.getElementById("desc").value || "—"]);
+      const attachYN = document.getElementById("attachYN").value;
+      if (attachYN === "Yes" && selectedFiles.length > 0) {
+        rows.push(["Attachments", selectedFiles.map(function (f) { return f.name; }).join(", ")]);
+      }
+      return rows;
+    }
+
+    /* ============================================================
+       SEND TO POWER AUTOMATE
+       Builds a flat JSON object and POSTs it to the submit URL.
+       ============================================================ */
+    async function sendToPowerAutomate(ticketId) {
+      if (!PA_CONFIG.submitTicket) return; // URL not configured — skip silently
+
+      const issueType = document.getElementById("issueType").value;
+
+      // Build flat payload object
+      const payload = {
+        ticketId:    ticketId,
+        dateTime:    document.getElementById("date").value,
+        issueType:   issueType,
+        name:        document.getElementById("userName").value,
+        email:       document.getElementById("email").value,
+        mobile:      document.getElementById("mobile").value,
+        company:     document.getElementById("company").value,
+        department:  document.getElementById("department").value,
+        location:    document.getElementById("location").value,
+        requestedBy: document.getElementById("requestedBy").value || "",
+        description: document.getElementById("desc").value || ""
+      };
+
+      if (issueType === "IT") {
+        payload.category    = document.getElementById("mainCategory").value;
+        payload.subcategory = document.getElementById("subCategory").value;
+        payload.itemDetail  = document.getElementById("itemDetail").value;
+      } else {
+        payload.sapUserId   = document.getElementById("sapUserId").value || "";
+        payload.database    = document.getElementById("dbName").value;
+        payload.sapModule   = document.getElementById("sapModule").value === "Other"
+          ? (document.getElementById("sapModuleOther").value || "Other")
+          : document.getElementById("sapModule").value;
+        payload.sapSubModule= document.getElementById("sapSubModule").value === "Other"
+          ? (document.getElementById("sapSubModuleOther").value || "Other")
+          : document.getElementById("sapSubModule").value;
+        payload.sapIssue    = document.getElementById("sapIssue").value === "Other"
+          ? (document.getElementById("sapIssueOther").value || "Other")
+          : document.getElementById("sapIssue").value;
+      }
+
+      const paStatus = document.getElementById("paStatus");
+
+      // Attach files (base64-encoded) if any were selected and accepted
+      const attachYN = document.getElementById("attachYN").value;
+      if (attachYN === "Yes" && selectedFiles.length > 0) {
+        try {
+          payload.attachments = await buildAttachmentsPayload();
+        } catch (err) {
+          console.error("Attachment encoding error:", err);
+          paStatus.textContent = "⚠️ Could not read attached file(s). Ticket saved without attachments.";
+          paStatus.className   = "pa-status error";
+          payload.attachments = [];
+        }
+      } else {
+        payload.attachments = [];
+      }
+
+      try {
+        const res = await fetch(PA_CONFIG.submitTicket, {
+          method:  "POST",
+          headers: { "Content-Type": "application/json" },
+          body:    JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        paStatus.textContent = "✅ Ticket saved to server successfully.";
+        paStatus.className   = "pa-status success";
+      } catch (err) {
+        console.error("Power Automate submit error:", err);
+        paStatus.textContent = "⚠️ Could not save to server. Please email IT with your ticket number.";
+        paStatus.className   = "pa-status error";
+      }
+    }
+
+    /* ============================================================
+       FORM SUBMIT
+       ============================================================ */
+    async function handleSubmit() {
+      if (!validateForm()) return;
+
+      const btn      = document.getElementById("submitBtn");
+      btn.disabled   = true;
+      btn.innerHTML  = '<div class="spinner" style="border-color:#ffffff44;border-top-color:#fff"></div> Submitting…';
+
+      const ticketId = generateTicketID();
+      document.getElementById("successTid").textContent = ticketId;
+      document.getElementById("ticketView").classList.remove("show");
+      document.getElementById("paStatus").className = "pa-status";
+
+      // Send to Power Automate (non-blocking — show popup regardless)
+      sendToPowerAutomate(ticketId).finally(function () {
+        // PA status already updated inside sendToPowerAutomate
+      });
+
+      document.getElementById("successOverlay").classList.add("show");
+
+      btn.disabled  = false;
+      btn.innerHTML = '<svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg> Submit Ticket';
+    }
+
+    /* ============================================================
+       POPUP ACTIONS
+       ============================================================ */
+    function toggleTicketView() {
+      const panel = document.getElementById("ticketView");
+      if (panel.classList.contains("show")) { panel.classList.remove("show"); return; }
+      const rows = collectTicketData();
+      panel.innerHTML = rows.map(function (r) {
+        return '<div class="ticket-view-row">' +
+          '<span class="ticket-view-label">' + r[0] + '</span>' +
+          '<span class="ticket-view-val">'   + r[1] + '</span>' +
+          '</div>';
+      }).join("");
+      panel.classList.add("show");
+    }
+
+    function copyTicketNumber() {
+      const id = document.getElementById("ticketId").value;
+      navigator.clipboard.writeText(id).then(function () {
+        const toast = document.getElementById("copyToast");
+        toast.classList.add("show");
+        setTimeout(function () { toast.classList.remove("show"); }, 2500);
+      }).catch(function (e) { console.error("Copy failed:", e); });
+    }
+
+    function downloadPDF() {
+      const rows      = collectTicketData();
+      const ticketId  = document.getElementById("ticketId").value;
+      const logoSrc   = document.getElementById("companyLogo").src;
+      const company   = document.getElementById("company").value;
+      const printDate = new Date().toLocaleString();
+      const tableRows = rows.map(function (r) {
+        return "<tr>" +
+          "<td style='padding:7px 12px;font-weight:600;color:#374151;background:#f7f8fa;width:140px;border-bottom:1px solid #eef0f4'>" + r[0] + "</td>" +
+          "<td style='padding:7px 12px;color:#111827;border-bottom:1px solid #eef0f4'>" + r[1] + "</td>" +
+          "</tr>";
+      }).join("");
+      const html =
+        "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Ticket " + ticketId + "</title>" +
+        "<style>body{font-family:'Segoe UI',sans-serif;margin:0;padding:32px;color:#111827;background:#fff}" +
+        ".header{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #0f52ba;padding-bottom:16px;margin-bottom:24px}" +
+        ".header img{height:48px;object-fit:contain}.header-text h1{font-size:18px;color:#0f52ba;margin:0 0 4px}" +
+        ".header-text p{font-size:12px;color:#6b7280;margin:0}" +
+        ".tid-box{background:#e8f0fb;border:1.5px solid #c0d4f5;border-radius:8px;padding:10px 20px;display:inline-block;font-size:16px;font-weight:700;color:#0f52ba;letter-spacing:1px;margin-bottom:20px}" +
+        "table{width:100%;border-collapse:collapse;border:1px solid #eef0f4}" +
+        ".footer{margin-top:28px;font-size:11px;color:#9ca3af;text-align:center;border-top:1px solid #eef0f4;padding-top:12px}</style></head><body>" +
+        "<div class='header'><img src='" + logoSrc + "' alt='" + company + "'>" +
+        "<div class='header-text'><h1>SAP &amp; IT Service Portal</h1><p>" + company + "</p></div></div>" +
+        "<div class='tid-box'>" + ticketId + "</div>" +
+        "<table>" + tableRows + "</table>" +
+        "<div class='footer'>Generated on " + printDate + " &nbsp;|&nbsp; SAP &amp; IT Service Portal</div>" +
+        "<" + "/body>" + "<" + "/html>";
+      const blob = new Blob([html], { type: "text/html" });
+      const url  = URL.createObjectURL(blob);
+      const tab  = window.open(url, "_blank");
+      if (tab) { tab.addEventListener("load", function () { tab.print(); }); }
+      else { alert("Pop-up was blocked. Please allow pop-ups and try again."); }
+    }
+
+    function printTicket() { downloadPDF(); }
+
+    function resetForm() {
+      document.getElementById("successOverlay").classList.remove("show");
+      ["userName","email","mobile","requestedBy","desc","sapUserId","mainCategoryOther","subCategoryOther","itemDetailOther","sapModuleOther","sapSubModuleOther","sapIssueOther"].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+      });
+      document.querySelectorAll(".field-error").forEach(function (el) { el.classList.remove("field-error"); });
+      document.getElementById("attachYN").value = "No";
+      document.getElementById("uploadSection").style.display = "none";
+      document.getElementById("fileUpload").value = "";
+      document.getElementById("fileList").innerHTML = "";
+      document.getElementById("fileErr").textContent = "";
+      selectedFiles = [];
+      document.getElementById("issueType").value = "IT";
+      setIssueType("IT");
+      document.getElementById("ticketId").value = "";
+      const badge = document.getElementById("ticketBadge");
+      badge.textContent = "— Will be assigned on submit —";
+      badge.classList.remove("assigned");
+    }
+  </script>
+
+</body>
+</html>
